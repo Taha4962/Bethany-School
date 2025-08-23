@@ -1,36 +1,36 @@
 // Load student data and initialize the application
-fetch('KG1_student.json')
-    .then(response => response.json())
-    .then(data => {
-        const students = data.students;
-        generateIDCards(students);
-        setupEventListeners();
-        checkUrlForStudentData(students);
-    })
-    .catch(error => console.error('Error loading student data:', error));
+fetch("KG1_student.json")
+  .then((response) => response.json())
+  .then((data) => {
+    const students = data.students;
+    generateIDCards(students);
+    setupEventListeners();
+    checkUrlForStudentData(students);
+  })
+  .catch((error) => console.error("Error loading student data:", error));
 
 /**
  * Generates ID cards for all students
  * @param {Array} students - Array of student objects
  */
 function generateIDCards(students) {
-    const cardsContainer = document.getElementById('cardsContainer');
-    
-    if (!cardsContainer) {
-        console.error('Container element not found');
-        return;
-    }
+  const cardsContainer = document.getElementById("cardsContainer");
 
-    if (typeof QRCode === 'undefined') {
-        console.error('QRCode library not loaded!');
-        return;
-    }
+  if (!cardsContainer) {
+    console.error("Container element not found");
+    return;
+  }
 
-    students.forEach(student => {
-        // Create front of ID card
-        const frontCard = document.createElement('article');
-        frontCard.className = 'id-card';
-        frontCard.innerHTML = `
+  if (typeof QRCode === "undefined") {
+    console.error("QRCode library not loaded!");
+    return;
+  }
+
+  students.forEach((student) => {
+    // Create front of ID card
+    const frontCard = document.createElement("article");
+    frontCard.className = "id-card";
+    frontCard.innerHTML = `
            
 
             <header class="school-card__header">
@@ -38,7 +38,7 @@ function generateIDCards(students) {
     <div class="school-details">
         <p class="school-address">${student.school.address}</p>
                 <p class="school-address">${student.school.addre}</p>
-          <p class="school-number >Phone: ${student.school.contact.phone }</p>
+          <p class="school-number >Phone: ${student.school.contact.phone}</p>
         <p class="school-session">
        
             <span class="session-label">Session:</span>
@@ -70,19 +70,24 @@ function generateIDCards(students) {
                     <h1 class="name"> <span> </span>${student.name.toUpperCase()}</h1>
                   <div class="info-list">
     <div class="info-item"><span>Class: </span> ${student.class}&nbsp;</div>
-    <div class="info-item"><span>Father's Name: </span> ${student.father || 'N/A'}&nbsp;</div>
+    <div class="info-item"><span>Father's Name: </span> ${
+      student.father || "N/A"
+    }&nbsp;</div>
     <div class="Contact"><span>Contact: </span> ${student.contact}&nbsp;</div>
     <div class="info-item"><span>DOB: </span> ${student.dob}&nbsp;</div>
-    <div class="info-item address"><span>Add:</span> ${student.address.replace(/,/g, ',')}&nbsp;</div>
+    <div class="info-item address"><span>Add:</span> ${student.address.replace(
+      /,/g,
+      ","
+    )}&nbsp;</div>
 </div>
                 </div>
             </section>
         `;
 
-        // Create back of ID card
-        const backCard = document.createElement('article');
-        backCard.className = 'id-card back';
-        backCard.innerHTML = `
+    // Create back of ID card
+    const backCard = document.createElement("article");
+    backCard.className = "id-card back";
+    backCard.innerHTML = `
             <img src="${student.school.logo}" alt="School Logo" class="back-logo">
             <h2 class="back-title">${student.school.name}</h2>
                             <p>Dise Code: ${student.school.codes.udise}</p>
@@ -100,11 +105,11 @@ function generateIDCards(students) {
             </div>
         `;
 
-        cardsContainer.appendChild(frontCard);
-        cardsContainer.appendChild(backCard);
+    cardsContainer.appendChild(frontCard);
+    cardsContainer.appendChild(backCard);
 
-        generateQRCodeForStudent(student);
-    });
+    generateQRCodeForStudent(student);
+  });
 }
 
 /**
@@ -112,28 +117,28 @@ function generateIDCards(students) {
  * @param {Object} student - Student object
  */
 function generateQRCodeForStudent(student) {
-    const qrContainer = document.getElementById(`qr-${student.id}`);
-    if (!qrContainer) return;
+  const qrContainer = document.getElementById(`qr-${student.id}`);
+  if (!qrContainer) return;
 
-    const url = `${window.location.origin}${window.location.pathname}?id=${student.id}`;
-    qrContainer.innerHTML = '';
+  const url = `${window.location.origin}${window.location.pathname}?id=${student.id}`;
+  qrContainer.innerHTML = "";
 
-    const wrapper = document.createElement('div');
-wrapper.style.textAlign = 'center';
-wrapper.style.paddingTop = '60px'; 
-    new QRCode(qrContainer, {
-        text: url,
-        width: 90,
-        height: 90,
-        
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
+  const wrapper = document.createElement("div");
+  wrapper.style.textAlign = "center";
+  wrapper.style.paddingTop = "60px";
+  new QRCode(qrContainer, {
+    text: url,
+    width: 90,
+    height: 90,
 
-    qrContainer.addEventListener('click', () => {
-        window.open(url, '_blank');
-    });
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+
+  qrContainer.addEventListener("click", () => {
+    window.open(url, "_blank");
+  });
 }
 
 /**
@@ -141,14 +146,18 @@ wrapper.style.paddingTop = '60px';
  * @param {Object} student - Student object to verify
  */
 function showVerification(student) {
-    // Activate verification tab
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector('[data-tab="verification"]').classList.add('active');
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    document.getElementById('verification').classList.add('active');
+  // Activate verification tab
+  document
+    .querySelectorAll(".tab-btn")
+    .forEach((btn) => btn.classList.remove("active"));
+  document.querySelector('[data-tab="verification"]').classList.add("active");
+  document
+    .querySelectorAll(".tab-content")
+    .forEach((tab) => tab.classList.remove("active"));
+  document.getElementById("verification").classList.add("active");
 
-    // Create photo HTML with fallback
-    const photoHtml = `
+  // Create photo HTML with fallback
+  const photoHtml = `
         <div class="verification-photo">
             <div class="photo-container">
                 <img src="${student.photo}" 
@@ -159,15 +168,15 @@ function showVerification(student) {
         </div>
     `;
 
-    // Generate verification details HTML
-    document.getElementById('verificationDetails').innerHTML = `
+  // Generate verification details HTML
+  document.getElementById("verificationDetails").innerHTML = `
         ${photoHtml}
         <div class="detail-grid">
             <div class="detail-card">
                 <h3><i class="fas fa-user-graduate"></i> Student Information</h3>
                 <p><strong>Name:</strong> ${student.name}</p>
                 <p><strong>Class:</strong> ${student.class}</p>
-                <p><strong>Roll No:</strong> ${student.roll || 'N/A'}</p>
+                <p><strong>Roll No:</strong> ${student.roll || "N/A"}</p>
                 <p><strong>Student ID:</strong> ${student.id}</p>
                 <p><strong>Date of Birth:</strong> ${student.dob}</p>
                 <p><strong>Contact:</strong> ${student.contact}</p>
@@ -192,39 +201,45 @@ function showVerification(student) {
             
             <div class="detail-card">
                 <h3><i class="fas fa-calendar-check"></i> Validity</h3>
-                <p><strong>Valid Through:</strong> ${student.valid || '2027'}</p>
+                <p><strong>Valid Through:</strong> ${
+                  student.valid || "2027"
+                }</p>
               
                 <p><strong>Status:</strong> <span class="status-active">Active</span></p>
             </div>
         </div>
     `;
 
-    document.getElementById('statusText').innerHTML = `
+  document.getElementById("statusText").innerHTML = `
         <i class="fas fa-check-circle"></i> ID Verified Successfully!
         <small>Verified on ${new Date().toLocaleDateString()}</small>
     `;
 }
-    // Rest of your function...
+// Rest of your function...
 
 /**
  * Sets up event listeners for UI interactions
  */
 function setupEventListeners() {
-    // Tab switching
-    document.querySelectorAll('.tab-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const tabId = button.getAttribute('data-tab');
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            button.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        });
+  // Tab switching
+  document.querySelectorAll(".tab-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const tabId = button.getAttribute("data-tab");
+      document
+        .querySelectorAll(".tab-btn")
+        .forEach((btn) => btn.classList.remove("active"));
+      document
+        .querySelectorAll(".tab-content")
+        .forEach((content) => content.classList.remove("active"));
+      button.classList.add("active");
+      document.getElementById(tabId).classList.add("active");
     });
+  });
 
-    // Download button
-    document.getElementById('downloadAll')?.addEventListener('click', () => {
-        alert('Export feature will be implemented soon');
-    });
+  // Download button
+  document.getElementById("downloadAll")?.addEventListener("click", () => {
+    alert("Export feature will be implemented soon");
+  });
 }
 
 /**
@@ -232,24 +247,24 @@ function setupEventListeners() {
  * @param {Array} students - Array of student objects
  */
 function checkUrlForStudentData(students) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const studentId = urlParams.get('id');
-    
-    if (studentId) {
-        const student = students.find(s => s.id === studentId);
-        if (student) {
-            showVerification(student);
-            // Scroll to verification section
-            setTimeout(() => {
-                document.getElementById('verification').scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        } else {
-            document.getElementById('statusText').innerHTML = `
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentId = urlParams.get("id");
+
+  if (studentId) {
+    const student = students.find((s) => s.id === studentId);
+    if (student) {
+      showVerification(student);
+      // Scroll to verification section
+      setTimeout(() => {
+        document
+          .getElementById("verification")
+          .scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    } else {
+      document.getElementById("statusText").innerHTML = `
                 <i class="fas fa-times-circle"></i> Invalid Student ID
                 <small>No student found with ID: ${studentId}</small>
             `;
-        }
     }
+  }
 }
-
-
